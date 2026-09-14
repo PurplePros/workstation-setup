@@ -22,3 +22,50 @@
     path: "{{ home_dir }}/.zshrc"
     line: 'source ~/.zsh_aliases'
     state: present
+
+- name: Install powerlevel10k theme
+  git:
+    repo: https://github.com/romkatv/powerlevel10k.git
+    dest: "{{ home_dir }}/.oh-my-zsh/custom/themes/powerlevel10k"
+    depth: 1
+    version: master
+
+- name: Set ZSH_THEME to powerlevel10k
+  lineinfile:
+    path: "{{ home_dir }}/.zshrc"
+    regexp: '^ZSH_THEME='
+    line: 'ZSH_THEME="powerlevel10k/powerlevel10k"'
+    state: present
+
+- name: Copy ~/.p10k.zsh
+  copy:
+    src: p10k.zsh
+    dest: "{{ home_dir }}/.p10k.zsh"
+    mode: '0644'
+
+- name: Check whether ~/.zshrc already enables the p10k instant prompt
+  command: grep -q p10k-instant-prompt "{{ home_dir }}/.zshrc"
+  register: p10k_instant_prompt
+  changed_when: false
+  failed_when: false
+  check_mode: false
+
+- name: Enable powerlevel10k instant prompt at the top of ~/.zshrc
+  when: p10k_instant_prompt.rc != 0
+  blockinfile:
+    path: "{{ home_dir }}/.zshrc"
+    marker: '# {mark} ANSIBLE MANAGED BLOCK: p10k instant prompt'
+    insertbefore: BOF
+    block: |
+      # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+      # Initialization code that may require console input (password prompts, [y/n]
+      # confirmations, etc.) must go above this block; everything else may go below.
+      if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+        source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+      fi
+
+- name: Source ~/.p10k.zsh from ~/.zshrc
+  lineinfile:
+    path: "{{ home_dir }}/.zshrc"
+    line: '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh'
+    state: present

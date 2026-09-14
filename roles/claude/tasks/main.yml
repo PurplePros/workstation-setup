@@ -1,11 +1,11 @@
 ---
 - name: Ensure Node.js is installed
-  homebrew:
+  community.general.homebrew:
     name: node
     state: present
 
 - name: Install Claude Code CLI
-  npm:
+  community.general.npm:
     name: "@anthropic-ai/claude-code"
     global: true
     state: present
