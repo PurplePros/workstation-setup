@@ -1,0 +1,63 @@
+---
+- name: Ensure Node.js is installed
+  homebrew:
+    name: node
+    state: present
+
+- name: Install Claude Code CLI
+  npm:
+    name: "@anthropic-ai/claude-code"
+    global: true
+    state: present
+
+- name: Ensure ~/.claude directory exists
+  file:
+    path: "{{ home_dir }}/.claude"
+    state: directory
+    mode: '0755'
+
+- name: Copy Claude settings.json
+  copy:
+    src: settings.json
+    dest: "{{ home_dir }}/.claude/settings.json"
+    mode: '0644'
+
+- name: Copy CLAUDE.md
+  copy:
+    src: CLAUDE.md
+    dest: "{{ home_dir }}/.claude/CLAUDE.md"
+    mode: '0644'
+
+- name: Ensure ~/.claude/skills directory exists
+  file:
+    path: "{{ home_dir }}/.claude/skills"
+    state: directory
+    mode: '0755'
+
+- name: Copy Claude skills
+  copy:
+    src: skills/
+    dest: "{{ home_dir }}/.claude/skills/"
+    mode: '0644'
+    directory_mode: '0755'
+
+- name: Ensure ~/.config/ccstatusline directory exists
+  file:
+    path: "{{ home_dir }}/.config/ccstatusline"
+    state: directory
+    mode: '0755'
+
+- name: Copy ccstatusline settings
+  copy:
+    src: ccstatusline/settings.json
+    dest: "{{ home_dir }}/.config/ccstatusline/settings.json"
+    mode: '0644'
+
+- name: Check if plannotator is installed
+  stat:
+    path: "{{ home_dir }}/.local/bin/plannotator"
+  register: plannotator_installed
+
+- name: Install plannotator
+  shell: curl -fsSL https://plannotator.ai/install.sh | bash -s -- --minimal
+  when: not plannotator_installed.stat.exists

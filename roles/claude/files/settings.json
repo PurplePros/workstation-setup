@@ -1,0 +1,36 @@
+{
+  "env": {
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-6",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-8"
+  },
+  "model": "sonnet",
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Claude needs your attention!\" with title \"Claude Code\" sound name \"Submarine\"'"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "npx -y ccstatusline@latest",
+    "padding": 0,
+    "refreshInterval": 10
+  },
+  "enabledPlugins": {
+    "mattpocock-skills@claude-plugins-official": true
+  },
+  "modelSettings": {
+    "claude-sonnet-4-6": {
+      "effortLevel": "medium"
+    }
+  },
+  "theme": "auto",
+  "agentPushNotifEnabled": true
+}

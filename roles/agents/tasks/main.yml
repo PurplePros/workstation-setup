@@ -1,0 +1,23 @@
+---
+- name: Ensure ~/.agents directory exists
+  file:
+    path: "{{ home_dir }}/.agents"
+    state: directory
+    mode: '0755'
+
+- name: Copy AGENTS.md
+  copy:
+    src: AGENTS.md
+    dest: "{{ home_dir }}/.agents/AGENTS.md"
+    mode: '0644'
+
+- name: Copy home reference files
+  copy:
+    src: "{{ item }}"
+    dest: "{{ home_dir }}/{{ item }}"
+    mode: '0644'
+  loop:
+    - PULL_REQUESTS.md
+    - COMMIT_MESSAGES.md
+    - OPINIONS.md
+    - VOICE.md

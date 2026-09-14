@@ -1,0 +1,12 @@
+---
+- name: Check if cmux is installed
+  stat:
+    path: /Applications/cmux.app
+  register: cmux_installed
+
+- name: Tap, trust, and install cmux
+  shell: |
+    brew tap manaflow-ai/cmux
+    brew trust manaflow-ai/cmux
+    brew install --cask cmux
+  when: not cmux_installed.stat.exists
