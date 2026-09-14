@@ -24,7 +24,16 @@
     "refreshInterval": 10
   },
   "enabledPlugins": {
-    "mattpocock-skills@claude-plugins-official": true
+    "mattpocock-skills@claude-plugins-official": true,
+    "plannotator@plannotator": true
+  },
+  "extraKnownMarketplaces": {
+    "plannotator": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/backnotprop/plannotator.git"
+      }
+    }
   },
   "modelSettings": {
     "claude-sonnet-4-6": {
